@@ -50,7 +50,7 @@ public class LoginFragment extends Fragment {
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final LoginButton loginButton = (LoginButton) getView().findViewById(R.id.view_facebook_login_button);
+        final LoginButton loginButton = getView().findViewById(R.id.view_facebook_login_button);
         loginButton.setFragment(this);
         loginButton.setReadPermissions("public_profile", "email", "user_friends", "user_posts");
         loginButton.registerCallback(mCallbackManager, mFacebookCallback);

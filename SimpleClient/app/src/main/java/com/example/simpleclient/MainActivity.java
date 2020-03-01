@@ -1,17 +1,10 @@
 package com.example.simpleclient;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,14 +12,23 @@ import com.example.simplefacebookclient.core.AuthModule;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         CreatePostDialogFragment.Listener {
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public void onSuccess(final LoginResult loginResult) {
-            // do nothing
+            showCreatePostDialog();
         }
 
         @Override
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mLogoutMenuItem.setVisible(false);
                     mProgressBar.setVisibility(View.VISIBLE);
                     mFloatingActionButton.setVisibility(View.GONE);
+                    mSwipeRefreshLayout.setVisibility(View.GONE);
                     mHeaderView.setBackgroundResource(R.drawable.side_nav_bar);
                     break;
 
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mLogoutMenuItem.setVisible(false);
                     mProgressBar.setVisibility(View.GONE);
                     mFloatingActionButton.setVisibility(View.GONE);
+                    mSwipeRefreshLayout.setVisibility(View.GONE);
                     mHeaderView.setBackgroundResource(R.drawable.side_nav_bar);
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mLogoutMenuItem.setVisible(true);
                     mProgressBar.setVisibility(View.GONE);
                     mFloatingActionButton.setVisibility(View.VISIBLE);
+                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                     mHeaderView.setBackgroundResource(R.drawable.side_nav_bar_auth);
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -96,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     };
 
     private DrawerLayout mDrawerLayout;
-    private TextView mUsernameTextView;
-    private TextView mNotAuthenticatedTextView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView mUsernameTextView, mNotAuthenticatedTextView;
     private MenuItem mLogoutMenuItem;
     private ProgressBar mProgressBar;
     private ProfileTracker mProfileTracker;
@@ -111,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mDrawerLayout = findViewById(R.id.view_drawer_layout);
         mProgressBar = findViewById(R.id.view_progress_bar);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_view);
 
         final Toolbar toolbar = findViewById(R.id.view_toolbar);
         setSupportActionBar(toolbar);
@@ -140,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
 
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+
     }
 
     @Override
@@ -193,64 +200,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onCreatePost(final CreatePostDialogFragment fragment, final String text) {
-        // do nothing
+        new PostsFragment();
+    }
+
+    private void showCreatePostDialog() {
+        new CreatePostDialogFragment().show(getSupportFragmentManager(), "CreatePostDialogFragment");
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 }
-
-//        FacebookSdk.sdkInitialize(getApplicationContext());
-//        AppEventsLogger.activateApp(this);
-//        loginButton = findViewById(R.id.login_button);
-//
-//        callbackManager = CallbackManager.Factory.create();
-//
-//        LoginManager.getInstance().registerCallback(callbackManager,
-//                new FacebookCallback<LoginResult>() {
-//                    @Override
-//                    public void onSuccess(LoginResult loginResult) {
-//                        // App code
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                        // App code
-//                    }
-//
-//                    @Override
-//                    public void onError(FacebookException exception) {
-//                        // App code
-//                    }
-//                });
-//
-//        loginButton.setReadPermissions("email");
-//        // If using in a fragment
-//        loginButton.setFragment(this);
-//
-//        // Callback registration
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                // App code
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                // App code
-//            }
-//
-//            @Override
-//            public void onError(FacebookException exception) {
-//                // App code
-//            }
-//        });
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
-
-    //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));  - для onClick проверка статуса входа
-    //AccessToken accessToken = AccessToken.getCurrentAccessToken();
-    //boolean isLoggedIn = accessToken != null && !accessToken.isExpired(); - просто проверка (в onCreateActivity?)
-//}

@@ -3,4 +3,6 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#ffab40</color>
+    <color name="colorDateText">#8F8F8F</color>
+    <color name="colorDeleteButton">#0e7ce2</color>
 </resources>

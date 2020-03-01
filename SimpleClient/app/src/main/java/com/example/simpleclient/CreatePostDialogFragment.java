@@ -3,7 +3,6 @@ package com.example.simpleclient;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,19 +33,14 @@ public class CreatePostDialogFragment extends DialogFragment {
 
         builder
                 .setTitle(R.string.create_post)
-                .setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
-
-                    @SuppressWarnings("ConstantConditions")
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        final TextInputEditText postTextInputEditText =
-                                getDialog().findViewById(R.id.view_post);
-                        final String text = postTextInputEditText.getText().toString();
-                        if (TextUtils.isEmpty(text)) {
-                            postTextInputEditText.setError(getString(R.string.error_no_text));
-                        } else {
-                            mListener.onCreatePost(CreatePostDialogFragment.this, text);
-                        }
+                .setPositiveButton(R.string.create, (dialog, which) -> {
+                    final TextInputEditText postTextInputEditText =
+                            getDialog().findViewById(R.id.view_post);
+                    final String text = postTextInputEditText.getText().toString();
+                    if (TextUtils.isEmpty(text)) {
+                        postTextInputEditText.setError(getString(R.string.error_no_text));
+                    } else {
+                        mListener.onCreatePost(CreatePostDialogFragment.this, text);
                     }
                 })
                 .setNegativeButton(R.string.cancel, null);
@@ -56,7 +50,6 @@ public class CreatePostDialogFragment extends DialogFragment {
         } else {
             builder.setView(LayoutInflater.from(getActivity()).inflate(R.layout.fragment_post_dialog, null, false));
         }
-
         return builder.create();
     }
 

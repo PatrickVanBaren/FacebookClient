@@ -7,8 +7,6 @@ import com.example.simplefacebookclient.core.db.DatabaseModule;
 import com.example.simplefacebookclient.core.posts.PostsModule;
 import com.facebook.FacebookSdk;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 public class ClientApplication extends Application {
 
     @Override
