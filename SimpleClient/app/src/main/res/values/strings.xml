@@ -2,20 +2,29 @@
     <string name="app_name">Facebook Client</string>
     <string name="facebook_app_id">207326540395923</string>
     <string name="fb_login_protocol_scheme">fb207326540395923</string>
-    <string name="not_authenticated">Не авторизован</string>
+    <string name="not_authenticated">Not authorized</string>
 
-    <string name="navigation_drawer_open">Меню</string>
+    <string name="navigation_drawer_open">Menu</string>
     <string name="navigation_drawer_close">@string/app_name</string>
 
-    <string name="logout">Выйти</string>
+    <string name="logout">Exit</string>
     <string name="login_error">Login error</string>
 
     <string name="create_post">Create Post</string>
-    <string name="post_text_hint">Text of post</string>
+    <string name="post_text_hint">What\'s new?</string>
 
     <string name="create">Create</string>
     <string name="error_no_text">No text</string>
 
+    <string name="edit_post">Edit post</string>
+    <string name="save_post">Save</string>
+
     <string name="cancel">Cancel</string>
-    <string name="DeleteButton">X</string>
+    <string name="delete_button">X</string>
+
+    <string name="date_format">MM.dd.yyyy HH:mm</string>
+
+    <string name="dialog_message_remove">Are you sure you want to delete the post?</string>
+    <string name="dialog_message_remove_title">Delete post</string>
+    <string name="ok">OK</string>
 </resources>

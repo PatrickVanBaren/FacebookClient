@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 
 public class PostsModule {
@@ -200,7 +202,6 @@ public class PostsModule {
 					listener.onPostsLoadFailed(mError);
 				}
 			}
-
 			changeState(State.IDLE);
 		}
 
@@ -231,19 +232,27 @@ public class PostsModule {
 			final Post post = (Post) params[1];
 
 			try {
-				if (response.getError() == null) {
-					mDatabaseModule.updatePost(createPostOrm(post));
-					return post;
-				} else {
-					final PostOrm oldPostOrm = mDatabaseModule.loadPost(post.getId());
-					post.setMessage(oldPostOrm.getMessage());
-					mError = new Exception(response.getError().getErrorMessage());
-					return post;
-				}
-			} catch (final Throwable t) {
-				mError = t;
+				mDatabaseModule.updatePost(createPostOrm(post));
+			} catch (SQLException e) {
+				mError = e;
 				return post;
 			}
+			return post;
+
+//			try {
+//				if (response.getError() == null) {
+//					mDatabaseModule.updatePost(createPostOrm(post));
+//					return post;
+//				} else {
+//					final PostOrm oldPostOrm = mDatabaseModule.loadPost(post.getId());
+//					post.setMessage(oldPostOrm.getMessage());
+//					mError = new Exception(response.getError().getErrorMessage());
+//					return post;
+//				}
+//			} catch (final Throwable t) {
+//				mError = t;
+//				return post;
+//			}
 		}
 
 		@Override
@@ -271,18 +280,26 @@ public class PostsModule {
 			final GraphResponse response = (GraphResponse) params[0];
 			final Post post = (Post) params[1];
 
-			try {
-				if (response.getError() == null) {
-					mDatabaseModule.deletePost(post.getId());
-					return post;
-				} else {
-					mError = new Exception(response.getError().getErrorMessage());
-					return post;
-				}
+			try{
+				mDatabaseModule.deletePost(post.getId());
 			} catch (final Throwable t) {
 				mError = t;
 				return post;
 			}
+			return  post;
+
+//			try {
+//				if (response.getError() == null) {
+//					mDatabaseModule.deletePost(post.getId());
+//					return post;
+//				} else {
+//					mError = new Exception(response.getError().getErrorMessage());
+//					return post;
+//				}
+//			} catch (final Throwable t) {
+//				mError = t;
+//				return post;
+//			}
 		}
 
 		@Override
@@ -311,23 +328,35 @@ public class PostsModule {
 			final GraphResponse response = (GraphResponse) params[0];
 			final Post post = (Post) params[1];
 
+			Random rnd = new Random();
 			try {
-				final String id;
-				if (response.getError() == null) {
-					id = response.getJSONObject().getString("id");
-				} else {
-					mError = new Exception(response.getError().getErrorMessage());
-					return null;
-				}
-
+				String id = Integer.toString(rnd.nextInt(99999));
 				post.setId(id);
+				post.setCreatedTime(new Date());
 				mDatabaseModule.createPost(createPostOrm(post));
-
-				return post;
 			} catch (final Throwable t) {
 				mError = t;
 				return post;
 			}
+			return post;
+
+//			try {
+//				final String id;
+//				if (response.getError() == null) {
+//					id = response.getJSONObject().getString("id");
+//				} else {
+//					mError = new Exception(response.getError().getErrorMessage());
+//					return null;
+//				}
+//
+//				post.setId(id);
+//				mDatabaseModule.createPost(createPostOrm(post));
+//
+//				return post;
+//			} catch (final Throwable t) {
+//				mError = t;
+//				return post;
+//			}
 		}
 
 		@Override
@@ -371,19 +400,28 @@ public class PostsModule {
 				}
 
 				final Set<Post> posts = Sets.newHashSet();
-				mDatabaseModule.deleteAllPosts();
-				for (int i = 0; i < postsJsonArray.length(); i++) {
-					final JSONObject postJson = postsJsonArray.getJSONObject(i);
-
+				List<PostOrm> postList = mDatabaseModule.getPosts();
+				int size = postList.size();
+				for(int i=0; i<size; i++) {
 					final Post post = new Post();
-					post.setId(postJson.getString("id"));
-					post.setMessage(postJson.getString("message"));
-					post.setCreatedTime(dateFormat.parse(postJson.getString("created_time")));
+					post.setMessage(postList.get(i).getMessage());
+					post.setId(postList.get(i).getId());
+					post.setCreatedTime(postList.get(i).getCreatedTime());
 					posts.add(post);
 
-					mDatabaseModule.createPost(createPostOrm(post));
+//				final Set<Post> posts = Sets.newHashSet();
+//				mDatabaseModule.deleteAllPosts();
+//				for (int i = 0; i < postsJsonArray.length(); i++) {
+//					final JSONObject postJson = postsJsonArray.getJSONObject(i);
+//
+//					final Post post = new Post();
+//					post.setId(postJson.getString("id"));
+//					post.setMessage(postJson.getString("message"));
+//					post.setCreatedTime(dateFormat.parse(postJson.getString("created_time")));
+//					posts.add(post);
+//
+//					mDatabaseModule.createPost(createPostOrm(post));
 				}
-
 				return posts;
 			} catch (final Throwable t) {
 				mError = t;
