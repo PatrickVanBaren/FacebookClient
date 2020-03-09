@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.simplefacebookclient.core.posts.Post;
@@ -65,7 +66,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         final TextView mPostText, mPostDate;
-        final Button mDeletePostButton;
+        final ImageButton mDeletePostButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

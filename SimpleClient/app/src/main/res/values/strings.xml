@@ -20,8 +20,6 @@
     <string name="save_post">Save</string>
 
     <string name="cancel">Cancel</string>
-    <string name="delete_button">X</string>
-
     <string name="date_format">MM.dd.yyyy HH:mm</string>
 
     <string name="dialog_message_remove">Are you sure you want to delete the post?</string>
